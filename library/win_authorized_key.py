@@ -4,7 +4,8 @@
 # This is a windows documentation stub.  Actual code lives in the .ps1
 # file of the same name.
 
-# Copyright 2019 Informatique CDC. All rights reserved.
+# Copyright: (c) 2019, Informatique CDC.
+# Copyright: (c) 2012, Brad Olson <brado@movedbylight.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -13,7 +14,7 @@ __metaclass__ = type
 
 ANSIBLE_METADATA = {'metadata_version': '1.0',
                     'status': ['preview'],
-                    'supported_by': 'communoty'}
+                    'supported_by': 'community'}
 
 
 DOCUMENTATION = r'''
@@ -21,7 +22,7 @@ DOCUMENTATION = r'''
 module: win_authorized_key
 short_description: Adds or removes an SSH authorized key
 description:
-    - Ansible module to add or to remove SSH authorized keys for particular user accounts on Windows-based systems.
+  - Ansible module to add or to remove SSH authorized keys for particular user accounts on Windows-based systems.
 options:
   user:
     description:
@@ -71,15 +72,14 @@ options:
     default: yes
   comment:
     description:
-      - Change the comment on the public key. Rewriting the comment is useful in
-        cases such as fetching it from GitHub or GitLab.
+      - Change the comment on the public key. Rewriting the comment is useful in cases such as fetching it from GitHub or GitLab.
       - If no comment is specified, the existing comment will be kept.
   follow:
     description:
       - Follow path symlink instead of replacing it
     type: bool
     default: 'no'
-author: "Stéphane Bilqué"
+author: "Stéphane Bilqué (@sbilque)"
 '''
 
 EXAMPLES = r'''
@@ -132,53 +132,53 @@ EXAMPLES = r'''
 
 RETURN = r'''
 exclusive:
-  description: If the key has been forced to be exclusive or not.
-  returned: success
-  type: boolean
-  sample: False
+    description: If the key has been forced to be exclusive or not.
+    returned: success
+    type: boolean
+    sample: False
 key:
-  description: The key that the module was running against.
-  returned: success
-  type: string
-  sample: https://github.com/user.keys
+    description: The key that the module was running against.
+    returned: success
+    type: string
+    sample: https://github.com/user.keys
 key_option:
-  description: Key options related to the key.
-  returned: success
-  type: string
-  sample: null
+    description: Key options related to the key.
+    returned: success
+    type: string
+    sample: null
 keyfile:
-  description: Path for authorized key file.
-  returned: success
-  type: string
-  sample: C:/users/charlie/.ssh/authorized_keys
+    description: Path for authorized key file.
+    returned: success
+    type: string
+    sample: C:/users/charlie/.ssh/authorized_keys
 manage_dir:
-  description: Whether this module managed the directory of the authorized key file.
-  returned: success
-  type: boolean
-  sample: True
+    description: Whether this module managed the directory of the authorized key file.
+    returned: success
+    type: boolean
+    sample: True
 path:
-  description: Alternate path to the authorized_keys file
-  returned: success
-  type: string
-  sample: null
+    description: Alternate path to the authorized_keys file.
+    returned: success
+    type: string
+    sample: null
 state:
-  description: Whether the given key (with the given key_options) should or should not be in the file
-  returned: success
-  type: string
-  sample: present
+    description: Whether the given key (with the given key_options) should or should not be in the file.
+    returned: success
+    type: string
+    sample: present
 unique:
-  description: Whether the key is unique
-  returned: success
-  type: boolean
-  sample: false
+    description: Whether the key is unique.
+    returned: success
+    type: boolean
+    sample: false
 user:
-  description: The username on the remote host whose authorized_keys file will be modified
-  returned: success
-  type: string
-  sample: user
+    description: The username on the remote host whose authorized_keys file will be modified.
+    returned: success
+    type: string
+    sample: user
 validate_certs:
-  description: This only applies if using a https url as the source of the keys. If set to C(no), the SSL certificates will not be validated.
-  returned: success
-  type: bool
-  sample: true
+    description: This only applies if using a https url as the source of the keys. If set to C(no), the SSL certificates will not be validated.
+    returned: success
+    type: bool
+    sample: true
 '''

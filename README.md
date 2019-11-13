@@ -12,7 +12,7 @@
 
 | Parameter      | Choices/Defaults                              | Comments                                                                                                                                                                                                                                                                                                                                                                                        |
 | -------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| comment        | non                                           | Change the comment on the public key.<br/>Rewriting the comment is useful in cases such as fetching it from GitHub or GitLab.<br/>If no comment is specified, the existing comment will be kept.                                                                                                                                                                                                |
+| comment        |                                           | Change the comment on the public key.<br/>Rewriting the comment is useful in cases such as fetching it from GitHub or GitLab.<br/>If no comment is specified, the existing comment will be kept.                                                                                                                                                                                                |
 | exclusive      | Choices:<ol><li>`no` <-<li>`yes`</ol>         | Whether to remove all other non-specified keys from the authorized_keys file.<br/>Multiple keys can be specified in a single key string value by separating them by newlines. This option is not loop aware, so if you use with_ , it will be exclusive per iteration of the loop, if you want multiple keys in the file you need to pass them all to key in a single batch as mentioned above. |
 | key            |                                               | The SSH public key(s), as a string or url (https://github.com/username.keys)                                                                                                                                                                                                                                                                                                                    |
 | key_options    |                                               | A string of ssh key options to be prepended to the key in the authorized_keys file                                                                                                                                                                                                                                                                                                              |
@@ -102,11 +102,13 @@ The following are the fields unique to this module:
 
 ## License
 
-[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
+GNU General Public License v3.0
+
+See [LICENCE](LICENCE.txt) to see the full text.
 
 ## Author Information
 
-* [Brad Olson (brado@movedbylight.com)](brado@movedbylight.com) - *Initial work in Python*
+* [Brad Olson (brado@movedbylight.com)](mailto:brado@movedbylight.com) - *Initial work in Python*
 * [Stéphane Bilqué](https://github.com/sbilque)  - *Translation in PowerShell*
 
 [Win32 OpenSSH]: https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH
