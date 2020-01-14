@@ -1,8 +1,8 @@
 galaxy_info:
+  role_name: win_authorized_key
   author: Stéphane Bilqué
   description: Adds or removes SSH authorized keys for particular user accounts on Windows-based systems.
   company: Informatique CDC
-
   license: GPLv3
 
   min_ansible_version: 2.6
