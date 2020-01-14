@@ -17,7 +17,7 @@ galaxy_info:
   galaxy_tags:
     - windows
     - ssh
-    - authorized key
+    - key
     - openssh
 
 dependencies: []
