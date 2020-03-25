@@ -549,14 +549,14 @@ function enforce_state {
         }
 
         try {
-            $resp = invoke-webrequest -method head -uri $key
+            $resp = invoke-webrequest -method head -uri $key -UseBasicParsing
             $statusCode = $resp.statuscode
             if ($statusCode -ne 200) {
                 $result = @{ }
                 Fail-Json -obj $result -Message ($LocalizedData.ErrorGettingKeyFrom -f $key);
             }
             else {
-                $wrq = (invoke-webrequest -uri $key -Method Get)
+                $wrq = (invoke-webrequest -uri $key -Method Get -UseBasicParsing)
                 $content = $wrq.Content
                 $encoding = $null
                 # http://en.wikipedia.org/wiki/Mime_type
