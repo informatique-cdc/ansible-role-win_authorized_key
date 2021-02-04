@@ -18,9 +18,9 @@ $key = Get-AnsibleParam -obj $params -name "key" -type "str" -failifempty $true 
 $path = Get-AnsibleParam -obj $params -name "path" -type "path" -failifempty $false
 $manage_dir = Get-AnsibleParam -obj $params -name "manage_dir" -type "bool" -failifempty $false -default $true
 $state = Get-AnsibleParam -obj $params "state" -type "str" -default "present" -validateSet "present", "absent" -resultobj $result
-$key_options = Get-AnsibleParam -obj $params -name "key_options" -type "str" -failifempty $false 
+$key_options = Get-AnsibleParam -obj $params -name "key_options" -type "str" -failifempty $false
 $exclusive = Get-AnsibleParam -obj $params -name "exclusive" -type "bool" -failifempty $false -default $false
-$comment = Get-AnsibleParam -obj $params -name "comment" -type "str" -failifempty $false 
+$comment = Get-AnsibleParam -obj $params -name "comment" -type "str" -failifempty $false
 $validate_certs = Get-AnsibleParam -obj $params -name "validate_certs" -type "bool" -failifempty $false -default $true
 $follow = Get-AnsibleParam -obj $params -name "follow" -type "bool" -failifempty $false -default $false
 
@@ -33,15 +33,15 @@ $set_args = @{
 }
 
 if ($null -ne $path) {
-    $set_args += @{ path = $path } 
+    $set_args += @{ path = $path }
 }
 
 if ($null -ne $manage_dir) {
-    $set_args += @{ manage_dir = $manage_dir } 
+    $set_args += @{ manage_dir = $manage_dir }
 }
 
 if ($null -ne $state) {
-    $set_args += @{ state = $state } 
+    $set_args += @{ state = $state }
 }
 
 if ($null -ne $key_options) {
@@ -57,11 +57,11 @@ if ($null -ne $comment) {
 }
 
 if ($null -ne $validate_certs) {
-    $set_args += @{ validate_certs = $validate_certs } 
+    $set_args += @{ validate_certs = $validate_certs }
 }
 
 if ($null -ne $follow) {
-    $set_args += @{ follow = $follow } 
+    $set_args += @{ follow = $follow }
 }
 
 # Localized messages
@@ -119,31 +119,31 @@ function keyfile {
     #>
     [OutputType([string])]
     param (
-        $user, 
-        $write = $False, 
+        $user,
+        $write = $False,
         $path = $null,
-        $manage_dir = $true, 
+        $manage_dir = $true,
         $follow = $false,
         $check_mode = $false
     )
 
-    [string]$keysfile = ""    
+    [string]$keysfile = ""
 
     if ($check_mode -and $path) {
         $keysfile = $path
         if ($follow) {
-            $keysfile = [IO.Path]::GetFullPath($path) 
+            $keysfile = [IO.Path]::GetFullPath($path)
         }
         return $keysfile
-    } 
+    }
 
     $user_entry = Get-pwnam -user $user
-    
+
     if (($null -eq $user_entry) -and [string]::IsNullOrEmpty($path)) {
         if ($check_mode) {
             $result = @{ }
             Fail-Json -obj $result -Message ($LocalizedData.UserMustExistCheckMode);
-        } 
+        }
         $result = @{ }
         Fail-Json -obj $result -Message ($LocalizedData.FailedToLookupUser -f $user);
     }
@@ -159,7 +159,7 @@ function keyfile {
     }
 
     if ($follow) {
-        $keysfile = [IO.Path]::GetFullPath($keysfile) 
+        $keysfile = [IO.Path]::GetFullPath($keysfile)
     }
 
     if (-not $write -or $check_mode) {
@@ -174,14 +174,14 @@ function keyfile {
 
     if (-not (Test-Path -Path $keysfile)) {
         $basedir = Split-Path -Parent $keysfile
-        
+
         if (-not (Test-Path -Path $basedir)) {
             New-Item -Path $basedir -ItemType Directory | Out-Null
         }
 
         if (-not (Test-Path -Path $keysfile)) {
             $name = Split-Path -Leaf $keysfile
-            $file = New-Item -Path $basedir -name $name -ItemType File -Value "" 
+            $file = New-Item -Path $basedir -name $name -ItemType File -Value ""
             $keysfile = $file.FullName
         }
     }
@@ -212,7 +212,7 @@ function parseoptions {
                 if ($part -match '=') {
                     $idx = $part.IndexOf('=')
                     [string]$key = $part.Substring(0, $idx)
-                    [string]$value = $part.Substring($idx + 1)                    
+                    [string]$value = $part.Substring($idx + 1)
                     $options_dict.$key = $value
                 }
                 elseif ($_ -ne ',') {
@@ -220,7 +220,7 @@ function parseoptions {
                 }
             }
         }
-       
+
     }
     return $options_dict
 }
@@ -238,7 +238,7 @@ function parsekey {
         $raw_key,
         [int]
         $rank = 0
-    ) 
+    )
 
     $VALID_SSH2_KEY_TYPES = @(
         'ssh-ed25519',
@@ -246,7 +246,7 @@ function parsekey {
         'ecdsa-sha2-nistp384',
         'ecdsa-sha2-nistp521',
         'ssh-dss',
-        'ssh-rsa'    
+        'ssh-rsa'
     )
 
     $options = $null   # connection options
@@ -262,11 +262,11 @@ function parsekey {
 
     if ($key_parts -and $key_parts[0] -eq '#') {
         # comment line, invalid line, etc.
-        return @{ 
-            key      = $raw_key 
+        return @{
+            key      = $raw_key
             key_type = 'skipped'
             options  = $null
-            comment  = $null 
+            comment  = $null
             rank     = $rank
         }
     }
@@ -298,11 +298,11 @@ function parsekey {
         $comment = $key_parts[($type_index + 2)..($key_parts.Count - $type_index + 2)] -join " "
     }
 
-    return @{ 
-        key      = $key 
+    return @{
+        key      = $key
         key_type = $key_type
         options  = $options
-        comment  = $comment 
+        comment  = $comment
         rank     = $rank
     }
 }
@@ -331,7 +331,7 @@ function parsekeys {
 
     $keys = [ordered]@{ }
     $rank_index = 0
-    $all_lines = $lines.Split("`r`n|`r|`n") | Where-Object { -not [String]::IsNullOrWhiteSpace($_) } 
+    $all_lines = $lines.Split("`r`n|`r|`n") | Where-Object { -not [String]::IsNullOrWhiteSpace($_) }
 
     foreach ($line in $all_lines) {
         $key_data = parsekey -raw_key $line -rank $rank_index
@@ -341,13 +341,13 @@ function parsekeys {
         else {
             # for an invalid line, just set the line
             # dict key to the line so it will be re-output later
-            $keys.$line = @{ 
-                key      = $line 
+            $keys.$line = @{
+                key      = $line
                 key_type = 'skipped'
                 options  = $null
-                comment  = $null 
+                comment  = $null
                 rank     = $rank_index
-            }           
+            }
         }
         $rank_index++
     }
@@ -386,13 +386,13 @@ function writefile {
 
     $OSBits = ([System.IntPtr]::Size * 8) #Get-ProcessorBits
 
-    #On 64-bit, always favor 64-bit Program Files no matter what our execution is now (works back past XP / Server 2003) 
-    If ($env:ProgramFiles.contains('x86')) { 
-        $PF = $env:ProgramFiles.replace(' (x86)', '') 
-    } 
-    Else { 
-        $PF = $env:ProgramFiles 
-    } 
+    #On 64-bit, always favor 64-bit Program Files no matter what our execution is now (works back past XP / Server 2003)
+    If ($env:ProgramFiles.contains('x86')) {
+        $PF = $env:ProgramFiles.replace(' (x86)', '')
+    }
+    Else {
+        $PF = $env:ProgramFiles
+    }
 
     $OpenSSHPSUtilityScriptDir = "$PF\OpenSSH-Win$($OSBits)"
 
@@ -452,12 +452,12 @@ function serialize {
                 $option_str = $option_strings -join ","
                 $option_str += " "
             }
-    
+
             # comment line or invalid line, just leave it
             if (-not $key_type) {
                 $key_line = $key
             }
-    
+
             if ($key_type -eq 'skipped') {
                 $key_line = $key.key
             }
@@ -482,11 +482,11 @@ function enforce_state {
     .PARAMETER user
     The username on the remote host whose authorized_keys file will be modified.
     .PARAMETER key
-    The SSH public key(s), as a string or url 
+    The SSH public key(s), as a string or url
     .PARAMETER path
-    Alternate path to the authorized_keys file. (default: $home/.ssh/authorized_keys) 
+    Alternate path to the authorized_keys file. (default: $home/.ssh/authorized_keys)
     .PARAMETER manage_dir
-    Whether this module should manage the directory of the authorized key file. 
+    Whether this module should manage the directory of the authorized key file.
     .PARAMETER state
     Whether the given key (with the given key_options) should or should not be in the file.
     .PARAMETER key_options
@@ -566,7 +566,7 @@ function enforce_state {
                     $key = $encoding.GetString($content)
                 }
                 else {
-                    $key = $content                
+                    $key = $content
                 }
             }
         }
@@ -574,10 +574,10 @@ function enforce_state {
             $result = @{ }
             Fail-Json -obj $result -Message ($LocalizedData.ErrorGettingKeyFrom -f $key);
         }
-    }   
+    }
 
     # extract individual keys into an array, skipping blank lines and comments
-    $new_keys = $key.Split("`r`n|`r|`n") | Where-Object { -not [String]::IsNullOrWhiteSpace($_) } | Where-Object { $_.Trim() -NotMatch '^#' }   
+    $new_keys = $key.Split("`r`n|`r|`n") | Where-Object { -not [String]::IsNullOrWhiteSpace($_) } | Where-Object { $_.Trim() -NotMatch '^#' }
 
     # check current state -- just get the filename, don't create file
     $do_write = $false
@@ -585,8 +585,8 @@ function enforce_state {
     $params.keyfile = $keyfile
 
     $existing_content = readfile -FileName $keyfile
-    $existing_keys = parsekeys -lines $existing_content 
-    
+    $existing_keys = parsekeys -lines $existing_content
+
     # Add a place holder for keys that should exist in the state=present and
     # exclusive=true case
     $keys_to_exist = @()
@@ -627,7 +627,7 @@ function enforce_state {
             # is present
             $existing_key = $existing_keys.$($parsed_new_key.key)
 
-            $diff_options = Compare-Hashtable -Left $parsed_new_key.options -Right $existing_key.options | Where-Object { $_.Side -eq '=>' -or $_.Side -eq '<=' } 
+            $diff_options = Compare-Hashtable -Left $parsed_new_key.options -Right $existing_key.options | Where-Object { $_.Side -eq '=>' -or $_.Side -eq '<=' }
 
             if ($state -eq 'present' -and (($parsed_new_key.key_type -ne $existing_key.key_type) -or ($diff_options.Count -gt 0) -or ($parsed_new_key.comment -ne $existing_key.comment))) {
                 $non_matching_keys += $existing_key
@@ -652,21 +652,21 @@ function enforce_state {
             # new key that didn't exist before. Where should it go in the ordering?
             if (-not $matched) {
                 # We want the new key to be after existing keys if not exclusive (rank > max_rank_of_existing_keys)
-                $total_rank = $max_rank_of_existing_keys + $parsed_new_key.rank 
+                $total_rank = $max_rank_of_existing_keys + $parsed_new_key.rank
                 # replace existing key tuple with new parsed key with its total rank
-                $existing_keys[$parsed_new_key.key] = @{ 
-                    key      = $parsed_new_key.key 
+                $existing_keys[$parsed_new_key.key] = @{
+                    key      = $parsed_new_key.key
                     key_type = $parsed_new_key.key_type
                     options  = $parsed_new_key.options
                     comment  = $parsed_new_key.comment
                     rank     = $total_rank
-                }        
+                }
                 $do_write = $true
             }
         }
         elseif ($state -eq 'absent') {
-            if (-not $matched) { 
-                continue 
+            if (-not $matched) {
+                continue
             }
             $existing_keys.Remove($parsed_new_key.key)
             $do_write = $true
@@ -682,7 +682,7 @@ function enforce_state {
         foreach ($key in $to_remove) {
             $existing_keys.Remove($key)
             $do_write = $true
-        }   
+        }
     }
 
     if (-not $do_write) {
@@ -693,19 +693,19 @@ function enforce_state {
 
     if ($do_write) {
         $filename = keyfile -user $user -write $do_write -path $path -manage_dir $manage_dir -follow $follow -check_mode $check_mode
-        $new_content = serialize -keys $existing_keys  
+        $new_content = serialize -keys $existing_keys
 
         $diff = $null
 
         if ($diff_mode) {
             $diff = @{
-                before_header = $params.keyfile  
+                before_header = $params.keyfile
                 after_header  = $filename
                 before        = $existing_content
                 after         = $new_content
             }
             $params.diff = $diff
-        }   
+        }
 
         if ($check_mode) {
             $result = @{
@@ -725,11 +725,11 @@ function enforce_state {
             }
             Exit-Json -obj $result
         }
-    }    
+    }
 
-    return $params    
+    return $params
 }
 
-$result = enforce_state @set_args    
+$result = enforce_state @set_args
 
 Exit-Json -obj $result
