@@ -13,6 +13,7 @@ galaxy_info:
    - name: Windows
      versions:
       - 2016
+      - 2019
 
   galaxy_tags:
     - windows
